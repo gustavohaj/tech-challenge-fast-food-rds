@@ -8,9 +8,9 @@ variable "environment" {
   type        = string
 }
 
-variable "private_subnet_ids" {
-  description = "The IDs of the private subnets"
-  type        = list(string)
+variable "aws_region" {
+  description = "The AWS region to deploy to"
+  type        = string
 }
 
 variable "vpc_id" {
@@ -18,9 +18,14 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "vpc_cidr" {
-  description = "The CIDR block of the VPC"
-  type        = string
+variable "private_subnet_ids" {
+  description = "The IDs of the private subnets"
+  type        = list(string)
+}
+
+variable "eks_worker_security_group_ids" {
+  description = "The security group IDs of the EKS worker nodes"
+  type        = list(string)
 }
 
 variable "db_allocated_storage" {
@@ -38,9 +43,11 @@ variable "db_instance_class" {
 variable "db_name" {
   description = "The name of the database"
   type        = string
+  default     = "fast_food_db"
 }
 
 variable "db_username" {
   description = "The username for the database"
   type        = string
+  default     = "fastfood"
 }

@@ -1,14 +1,26 @@
-output "rds_endpoint" {
-  description = "The endpoint of the RDS instance"
-  value       = module.rds.rds_endpoint
+output "db_instance_endpoint" {
+  description = "The endpoint of the database instance"
+  value       = module.rds.db_instance_endpoint
 }
 
-output "rds_port" {
-  description = "The port of the RDS instance"
-  value       = module.rds.rds_port
+output "db_instance_port" {
+  description = "The port of the database instance"
+  value       = module.rds.db_instance_port
 }
 
-output "db_password_secret_arn" {
-  description = "The ARN of the secret containing the database password"
-  value       = module.rds.db_password_secret_arn
+output "db_instance_name" {
+  description = "The name of the database instance"
+  value       = module.rds.db_instance_name
+}
+
+output "db_instance_username" {
+  description = "The username for the database instance"
+  value       = module.rds.db_instance_username
+  sensitive   = true
+}
+
+output "db_instance_password" {
+  description = "The password for the database instance"
+  value       = module.rds.db_instance_password
+  sensitive   = true
 }

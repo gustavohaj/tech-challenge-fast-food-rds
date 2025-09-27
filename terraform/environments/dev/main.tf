@@ -4,10 +4,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.5"
-    }
   }
 }
 
@@ -15,33 +11,22 @@ provider "aws" {
   region = var.aws_region
 }
 
-# Data source to find the existing VPC
-data "aws_vpc" "main" {
-  tags = {
-    Name = "${var.project_name}-${var.environment}-vpc"
+data "terraform_remote_state" "eks_infra" {
+  backend = "s3"
+  config = {
+    bucket = "tech-challenge-fast-food-terraform-state"
+    key    = "environments/dev/terraform.tfstate"
+    region = "us-east-1"
   }
 }
 
-# Data source to find the existing private subnets
-data "aws_subnets" "private" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.main.id]
-  }
-  tags = {
-    Tier = "Private"
-  }
-}
-
-# RDS Module
 module "rds" {
   source = "../../modules/rds"
 
-  project_name       = var.project_name
-  environment        = var.environment
-  vpc_id             = data.aws_vpc.main.id
-  vpc_cidr           = data.aws_vpc.main.cidr_block
-  private_subnet_ids = data.aws_subnets.private.ids
-  db_name            = "fastfood"
-  db_username        = "root"
+  project_name                  = var.project_name
+  environment                   = var.environment
+  aws_region                    = var.aws_region
+  vpc_id                        = data.terraform_remote_state.eks_infra.outputs.vpc_id
+  private_subnet_ids            = data.terraform_remote_state.eks_infra.outputs.private_subnet_ids
+  eks_worker_security_group_ids = data.terraform_remote_state.eks_infra.outputs.eks_worker_security_group_ids
 }

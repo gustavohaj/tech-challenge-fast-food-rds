@@ -1,14 +1,26 @@
-output "rds_endpoint" {
-  description = "The endpoint of the RDS instance"
+output "db_instance_endpoint" {
+  description = "The endpoint of the database instance"
   value       = aws_db_instance.default.endpoint
 }
 
-output "rds_port" {
-  description = "The port of the RDS instance"
+output "db_instance_port" {
+  description = "The port of the database instance"
   value       = aws_db_instance.default.port
 }
 
-output "db_password_secret_arn" {
-  description = "The ARN of the secret containing the database password"
-  value       = aws_secretsmanager_secret.db_password.arn
+output "db_instance_name" {
+  description = "The name of the database instance"
+  value       = aws_db_instance.default.db_name
+}
+
+output "db_instance_username" {
+  description = "The username for the database instance"
+  value       = aws_db_instance.default.username
+  sensitive   = true
+}
+
+output "db_instance_password" {
+  description = "The password for the database instance"
+  value       = random_password.master_password.result
+  sensitive   = true
 }
